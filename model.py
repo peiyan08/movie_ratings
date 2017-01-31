@@ -23,6 +23,12 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+
+        return "<User user_id=%s email=%s>" % (self.user_id,
+                                               self.email)
+
 
 class Rating(db.Model):
     """docstring for  Rating"""
@@ -58,12 +64,6 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
-
-def __repr__(self):
-    """Provide helpful representation when printed"""
-
-    return "<User user_id=%s email=%s>" % (self.user_id,
-                                           self.email)
 
 
 if __name__ == "__main__":

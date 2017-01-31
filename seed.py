@@ -2,11 +2,12 @@
 
 from sqlalchemy import func
 from model import User
-# from model import Rating
-# from model import Movie
+from model import Rating
+from model import Movie
 
 from model import connect_to_db, db
 from server import app
+import datetime
 
 
 def load_users():
@@ -37,9 +38,40 @@ def load_users():
 def load_movies():
     """Load movies from u.item into database."""
 
+    Movie.query.delete()
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        line = row.split("|")
+        movie_id, title, released_at, imdb_url = line[0], line[1], line[2], line[4]
+        title = title.split("(")[0]
+
+        if released_at:
+            released_at = datetime.datetime.strptime(released_at, "%d-%b-%Y")
+        else:
+            released_at = None
+
+        movie = Movie(movie_id=movie_id,
+                      title=title,
+                      released_at=released_at,
+                      imdb_url=imdb_url)
+        db.session.add(movie)
+    db.session.commit()
+
 
 def load_ratings():
     """Load ratings from u.data into database."""
+    Rating.query.delete()
+    for row in open("seed_data/u.data"):
+        row = row.rstrip()
+        line = row.split("\t")
+        movie_id, user_id, score = line[0:3]
+
+        rating = Rating(movie_id=movie_id,
+                        user_id=user_id,
+                        score=score)
+
+        db.session.add(rating)
+    db.session.commit()
 
 
 def set_val_user_id():
@@ -63,6 +95,6 @@ if __name__ == "__main__":
 
     # Import different types of data
     load_users()
-    load_movies()
     load_ratings()
+    load_movies()
     set_val_user_id()

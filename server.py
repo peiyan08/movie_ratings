@@ -35,24 +35,30 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
-@app.route("/register", methods=["GET", "POST"])
+
+@app.route("/register_form")
+def display_register_form():
+    """"""
+
+    return render_template("register_form.html")
+
+
+@app.route("/register", methods=["POST"])
 def register():
-    if request.method == "GET":
 
-        return render_template("register_form.html")
+    username = request.form.get("email")
+    password = request.form.get("password")
 
-    else:
-        list_of_username = User.query.get(User.email).all()
-        print list_of_username
+    if db.session.query(User.email).filter_by(email=username).first():
+        flash("Sorry the email has already been registered.")
+        return redirect("/register_form")
 
-        username = request.form.get("email")
-        password = request.form.get("password")
-        if username in list_of_username:
-            flash("Sorry the email has already been registered.")
-            return render_template("render_template.html")
-        else:
-            new_user = User(email=username, password=password)
-            db.users.add(new_user)
+    else:  
+        new_user = User(email=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("You are successfully registered!")
+        return render_template("homepage.html")
 
 
 

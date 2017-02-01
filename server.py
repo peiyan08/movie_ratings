@@ -71,14 +71,17 @@ def login():
 
     u_username = request.form.get("email")
     u_password = request.form.get("password")
+    user_info = bdfasdfasdfasdfsdflaksdf
 
-    user_info = User.query.filter_by(email=u_username).first()
-
+    # ser.query(Rating.movie_id, Rating.score).join(Rating).filter(User.email==u_username).all()
+    user_id = user_info.user_id
     if user_info:
         if user_info.password == u_password:
             flash("Successfully logged in!")
             session["login"] = user_info.email
-            return redirect("/users/user_info.user_id", user_info=user_info)
+            # pass_user_id = url_for("show_user_info", user_id=user_id)
+            return redirect("/users/%s" % user_id)
+            
 
     # if db.session.query(User.email, User.password).filter_by(email=u_username).first():
     #     (d_username, d_password) = db.session.query(User.email, User.password).filter_by(email=u_username).first()
@@ -110,6 +113,18 @@ def logout():
 
     return redirect("/")
 
+
+@app.route("/users/<user_id>")
+def show_user_info():
+    """Show users info"""
+
+    u_username = request.form.get("email")
+    u_password = request.form.get("password")
+
+    rating_info = user_info.ratings
+
+    return render_template("show_user_info.html", rating_info=rating_info,
+                                                  user_info=user_info)
 
 
 if __name__ == "__main__":

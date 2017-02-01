@@ -6,8 +6,17 @@
     <ul>
      
         <li>
-        
+          {{ user_info.age }}
         </li>
+        <li>
+          {{ user_info.zipcode }}
+        </li>
+        <li>
+            {% for rating in rating_info %}
+          {{ rating.movie.name }} {{ rating.score }}
+          {% endfor %}
+        </li>
+
       
     </ul>
 

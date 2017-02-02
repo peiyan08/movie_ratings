@@ -71,15 +71,15 @@ def login():
 
     u_username = request.form.get("email")
     u_password = request.form.get("password")
-    user_info = bdfasdfasdfasdfsdflaksdf
+    user_info = User.query.filter_by(email=u_username).first()
 
     # ser.query(Rating.movie_id, Rating.score).join(Rating).filter(User.email==u_username).all()
-    user_id = user_info.user_id
+    
     if user_info:
+        user_id = user_info.user_id
         if user_info.password == u_password:
             flash("Successfully logged in!")
             session["login"] = user_info.email
-            # pass_user_id = url_for("show_user_info", user_id=user_id)
             return redirect("/users/%s" % user_id)
             
 
@@ -115,16 +115,56 @@ def logout():
 
 
 @app.route("/users/<user_id>")
-def show_user_info():
+def show_user_info(user_id):
     """Show users info"""
 
     u_username = request.form.get("email")
-    u_password = request.form.get("password")
-
+    user_info = User.query.filter_by(email=u_username).first()
     rating_info = user_info.ratings
 
     return render_template("show_user_info.html", rating_info=rating_info,
-                                                  user_info=user_info)
+                            user_info=user_info)
+
+
+@app.route("/movies", methods=['GET'])
+def movies():
+
+    movie_info = db.session.query(Movie).all()
+
+    return render_template("movies.html", movie_info=movie_info)
+
+
+@app.route("/movies/<movie_id>", methods=["POST"])
+def movie_rated(movie_id):
+
+
+    added_rating = request.form.get("rate_score")
+    print session['login']
+    user_id = User.query.filter_by(email=session["login"]).first().user_id
+
+
+    all_movies_rated_by_user = Rating.query.filter_by(user_id=user_id).all()
+    print all_movies_rated_by_user
+
+    flash("Your rating has been updated.")
+
+    return redirect("/movies")
+
+
+@app.route("/movies/<movie_id>")
+def show_movies(movie_id):
+    """Show movie rating info"""
+
+    show_movie_ratings = Rating.query.filter_by(movie_id=movie_id).all()
+    title_of_movie = Movie.query.filter_by(movie_id=movie_id).first().title
+
+    return render_template("show_movie_info.html", 
+                           show_movie_ratings=show_movie_ratings,
+                           title_of_movie=title_of_movie, movie_id=movie_id)
+
+
+
+
 
 
 if __name__ == "__main__":

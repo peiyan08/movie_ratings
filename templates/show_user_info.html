@@ -13,7 +13,8 @@
         </li>
         <li>
             {% for rating in rating_info %}
-          {{ rating.movie.name }} {{ rating.score }}
+          {{ rating.movie.title }} {{ rating.score }}
+          <br>
           {% endfor %}
         </li>
 

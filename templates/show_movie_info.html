@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>{{title_of_movie}}</h2>
+    <form action="/movies/{{ movie_id }}", method='POST'>
+        Rate {{title_of_movie}}:
+        <input type="number" name="rate_score" ></input>
+        <br>
+        <br>
+        <button type="submit">Submit</button>
+        <br>
+        <br>
+        <h10>*If you have already rated this movie, we will just update your last rating.</h10>
+
+    </form>
+    <ul>
+      
+          {% for rating in show_movie_ratings %}
+           <li>
+          {{ rating.score}}
+            </li>
+          
+          {% endfor %}
+
+
+      
+    </ul>
+
+{% endblock %}

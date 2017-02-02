@@ -139,12 +139,25 @@ def movie_rated(movie_id):
 
 
     added_rating = request.form.get("rate_score")
-    print session['login']
     user_id = User.query.filter_by(email=session["login"]).first().user_id
 
 
-    all_movies_rated_by_user = Rating.query.filter_by(user_id=user_id).all()
-    print all_movies_rated_by_user
+    all_movies_rated_by_user = db.session.query(Rating.movie_id, Rating.score).filter_by(user_id=user_id).all()
+ 
+    for movie_tuple in all_movies_rated_by_user:
+        
+        if int(movie_id) == movie_tuple[0]:
+            
+            rating_object = db.session.query(Rating).filter_by(user_id=user_id, movie_id=movie_id).first()
+            print rating_object
+           
+            return redirect("/movies")
+     
+    new_rating = Rating(movie_id=movie_id, user_id=user_id, score=added_rating)
+
+    db.session.add(new_rating)
+
+    db.session.commit()
 
     flash("Your rating has been updated.")
 

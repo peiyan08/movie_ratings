@@ -23,6 +23,13 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+
+        return "<User user_id=%s email=%s>" % (self.user_id,
+                                               self.email)
+
+
 
 class Rating(db.Model):
     """docstring for  Rating"""
@@ -50,8 +57,7 @@ class Rating(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed"""
 
-        return "<User user_id=%s email=%s>" % (self.user_id,
-                                               self.email)
+        return "<User user_id=%s" % (self.user_id)
 
 
 class Movie(db.Model):
@@ -63,6 +69,11 @@ class Movie(db.Model):
     title = db.Column(db.String(100), nullable=True)
     released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(200), nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed"""
+
+        return "<User movie_id=%s" % (self.movie_id)
 
 # Put your Movie and Rating model classes here.
 

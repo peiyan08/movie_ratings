@@ -38,13 +38,15 @@ def user_list():
 
 @app.route("/register_form")
 def display_register_form():
-    """"""
+    """Display register form"""
 
     return render_template("register_form.html")
 
 
 @app.route("/register", methods=["POST"])
 def register():
+    """Register user"""
+
 
     username = request.form.get("email")
     password = request.form.get("password")
@@ -63,25 +65,26 @@ def register():
 
 @app.route("/login", methods=["GET"])
 def login_input():
+    """Display lonin form"""
+
     return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
+    """Post login"""
 
     u_username = request.form.get("email")
     u_password = request.form.get("password")
     user_info = User.query.filter_by(email=u_username).first()
 
     # ser.query(Rating.movie_id, Rating.score).join(Rating).filter(User.email==u_username).all()
-    
     if user_info:
         user_id = user_info.user_id
         if user_info.password == u_password:
             flash("Successfully logged in!")
             session["login"] = user_info.email
-            return redirect("/users/%s" % user_id)
-            
+            return redirect("/users/%s" % user_id)  
 
     # if db.session.query(User.email, User.password).filter_by(email=u_username).first():
     #     (d_username, d_password) = db.session.query(User.email, User.password).filter_by(email=u_username).first()
@@ -100,11 +103,14 @@ def login():
 
 @app.route("/logout", methods=["GET"])
 def logout_screen():
+    """Display logout form"""
+
     return render_template("logout.html")
 
 
 @app.route("/logout", methods=["POST"])
 def logout():
+    """Display logout screen"""
 
     if not session.get("login"):
         session.pop("login")
@@ -128,14 +134,16 @@ def show_user_info(user_id):
 
 @app.route("/movies", methods=['GET'])
 def movies():
+    """Show all the movies"""
 
-    movie_info = db.session.query(Movie).all()
+    movie_info = db.session.query(Movie).order_by(Movie.title).all()
 
     return render_template("movies.html", movie_info=movie_info)
 
 
 @app.route("/movies/<movie_id>", methods=["POST"])
 def movie_rated(movie_id):
+    """Show individual movie new ratings and updated ratings"""
 
 
     added_rating = request.form.get("rate_score")
@@ -147,9 +155,13 @@ def movie_rated(movie_id):
     for movie_tuple in all_movies_rated_by_user:
         
         if int(movie_id) == movie_tuple[0]:
-            
-            rating_object = db.session.query(Rating).filter_by(user_id=user_id, movie_id=movie_id).first()
+            print "yes"
+            rating_object = Rating.query.filter_by(movie_id=movie_id,user_id=user_id).first()
             print rating_object
+
+            rating_object.score = added_rating
+
+            db.session.commit()
            
             return redirect("/movies")
      

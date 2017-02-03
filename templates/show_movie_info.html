@@ -18,7 +18,7 @@
       
           {% for rating in show_movie_ratings %}
            <li>
-          {{ rating.score}}
+          User: {{rating.user_id}}  -  Rating: {{ rating.score}} 
             </li>
           
           {% endfor %}

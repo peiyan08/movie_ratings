@@ -5,18 +5,21 @@
     <h2>Users</h2>
     <ul>
      
-        <li>
-          {{ user_info.age }}
-        </li>
-        <li>
-          {{ user_info.zipcode }}
-        </li>
-        <li>
+          
+          <h3> User Age: {{ user_info.age }}</h3>
+      
+          <h3> Zipcode: {{ user_info.zipcode }}</h3>
+        
+
+          <h3> Mavie Rated: </h3>
             {% for rating in rating_info %}
-          {{ rating.movie.title }} {{ rating.score }}
+          <li>  
+            {{ rating.movie.title }} {{ rating.score }}
           <br>
+          </li>
+
           {% endfor %}
-        </li>
+        
 
       
     </ul>
